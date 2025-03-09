@@ -32,7 +32,7 @@
                             name="person-add" class="text-2xl pr-2"></ion-icon>Tambah User</a></li>
                 <li class="hover:bg-slate-200 rounded-l-full p-2"><a href="#" class="flex items-center"><ion-icon
                             name="alert" class="text-2xl pr-2"></ion-icon>Call Service</a></li>
-                <li class="hover:bg-slate-200 rounded-l-full p-2"><a href="#" class="flex items-center"><ion-icon
+                <li class="hover:bg-slate-200 rounded-l-full p-2"><a href="logout" class="flex items-center"><ion-icon
                             name="log-out" class="text-2xl pr-2"></ion-icon>Keluar</a></li>
             </ul>
         </div>
@@ -48,8 +48,8 @@
 
                 <button class="flex w-fit gap-3" id="openPopupProfile">
                     <div class="flex flex-col text-sm">
-                        <h1>Hey, <b>Farrel</b>.</h1>
-                        <p class="text-left">Admin</p>
+                        <h1>Hey, <b>{{ $user->nama }}</b>.</h1>
+                        <p class="text-left">{{ $user->role }}</p>
                     </div>
                     <div class="flex">
                         <div class="w-9 h-9 overflow-hidden rounded-full my-auto bg-center bg-cover shadow-sm"
@@ -63,102 +63,75 @@
                     <div class="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full max-h-[90vh] overflow-y-auto">
                         <h2 class="text-xl font-semibold mb-4">Form: Data Diri</h2>
 
+                        <!-- Modal Form -->
                         <form id="popupFormProfile">
                             <div class="mb-4">
                                 <label for="name" class="block text-sm font-medium">Nama</label>
-                                <input type="text" id="name" name="name" required
+                                <input type="text" id="name" name="nama" required
                                     class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-                                    value="Farrel Adelio Asman">
+                                    value="{{ $user->nama }}">
                             </div>
 
                             <div class="mb-4">
                                 <label for="email" class="block text-sm font-medium">Email</label>
                                 <input type="email" id="email" name="email" required
                                     class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-                                    value="farreladelioasman@gmail.com">
-                            </div>
-
-                            <div class="mb-4">
-                                <label for="nip" class="block text-sm font-medium">NIP</label>
-                                <input type="nip" id="nip" name="nip" required
-                                    class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-                                    maxlength="18" value="11111111111111111">
+                                    value="{{ $user->email }}">
                             </div>
 
                             <div class="mb-4">
                                 <label for="no-hp" class="block text-sm font-medium">No Whatsapp</label>
                                 <input type="text" id="no-hp" name="no-hp" required
                                     class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-                                    maxlength="18" value="089686968886">
+                                    maxlength="18" value="{{ $user->phone }}">
                             </div>
 
                             <div class="mb-4 relative">
                                 <label for="pass" class="block text-sm font-medium">Password</label>
                                 <input type="password" id="pass" name="pass" required
                                     class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-                                    value="farrel@2025">
+                                    value="******">
                             
-                                <!-- Tombol Show/Hide dengan Ionicons -->
+                                <!-- Tombol Show/Hide Password -->
                                 <button type="button" id="togglePass" class="absolute right-2 top-8 text-xl text-gray-500">
                                     <ion-icon id="eyeIcon" name="eye-off"></ion-icon>
                                 </button>
                             </div>
-                            
-                            <script>
-                                const passInput = document.getElementById('pass');
-                                const togglePass = document.getElementById('togglePass');
-                                const eyeIcon = document.getElementById('eyeIcon');
-                            
-                                togglePass.addEventListener('click', () => {
-                                    if (passInput.type === 'password') {
-                                        passInput.type = 'text';
-                                        eyeIcon.setAttribute('name', 'eye');
-                                    } else {
-                                        passInput.type = 'password';
-                                        eyeIcon.setAttribute('name', 'eye-off');
-                                    }
-                                });
-                            </script>
 
-                            <div class="mb-4">
-                                <label for="email" class="block text-sm font-medium">KTP</label>
-                                <input type="file" id="email" name="email" required
-                                    class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400">
-                            </div>
-
-                            <div class="flex justify-between gap-2">
-                                <div class="mb-4 w-full">
-                                    <label for="jabatan" class="block text-sm font-medium">Jabatan</label>
-                                    <input type="text" id="jabatan" name="jabatan" required
-                                        class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
-                                        value="Pimpinan">
+                            <!-- Jika pengguna BUKAN admin, tampilkan field tambahan -->
+                            @if ($user->role !== 'admin')
+                                <div class="mb-4">
+                                    <label for="ktp" class="block text-sm font-medium">KTP</label>
+                                    <input type="file" id="ktp" name="ktp" required
+                                        class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400">
                                 </div>
 
-                                <div class="flex flex-col w-full">
-                                    <label for="depart"
-                                        class="block text-sm font-medium  focus:ring-2 focus:ring-blue-400">Departemen</label>
+                                <div class="flex justify-between gap-2">
+                                    <div class="mb-4 w-full">
+                                        <label for="jabatan" class="block text-sm font-medium">Jabatan</label>
+                                        <input type="text" id="jabatan" name="jabatan" required
+                                            class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                            value="{{ $user->jabatan }}">
+                                    </div>
 
-                                    <select name="depart" id="sort"
-                                        class="p-2 border rounded-md w-full  focus:ring-2 focus:ring-blue-400">
-                                        <option value="poltek">Informatika</option>
-                                        <option value="saab">Mesin</option>
-                                        <option value="mercedes">Manajemen Bisnis</option>
-                                    </select>
+                                    <div class="flex flex-col w-full">
+                                        <label for="depart" class="block text-sm font-medium">Departemen</label>
+                                        <select name="departemen" id="depart" class="p-2 border rounded-md w-full focus:ring-2 focus:ring-blue-400">
+                                            <option value="informatika" {{ $user->departemen == 'informatika' ? 'selected' : '' }}>Informatika</option>
+                                            <option value="mesin" {{ $user->departemen == 'mesin' ? 'selected' : '' }}>Mesin</option>
+                                            <option value="bisnis" {{ $user->departemen == 'bisnis' ? 'selected' : '' }}>Manajemen Bisnis</option>
+                                        </select>
+                                    </div>
                                 </div>
-                            </div>
-
+                            @endif
 
                             <div class="flex justify-end space-x-2">
-                                <button type="button" id="closePopupProfile"
-                                    class="bg-gray-300 text-black px-4 py-2 rounded-md">Cancel</button>
-                                <button type="submit"
-                                    class="bg-green-500 text-white px-4 py-2 rounded-md">Simpan</button>
+                                <button type="button" id="closePopupProfile" class="bg-gray-300 text-black px-4 py-2 rounded-md">Cancel</button>
+                                <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-md">Simpan</button>
                             </div>
                         </form>
                     </div>
                 </div>
-
-
             </div>
 
             <!-- Konten Utama -->
@@ -203,47 +176,30 @@
                 <h1 class="font-semibold font-poppins text-xl">Users</h1>
 
                 <div class="flex justify-between mt-2 gap-1 bg-white shadow-md px-2 md:px-12 xl:px-36 py-5 rounded-xl">
-                    <div class="flex flex-col gap-3 w-fit text-center hover:bottom-2 duration-1000">
-                        <div class="background w-12 h-12 xl:w-20 xl:h-20 bg-center bg-cover rounded-full m-auto shadow-sm"
-                            style=" 
-                            background-image: url(../assets/user\ \(2\).jpg);"></div>
-                        <div class="flex flex-col">
-                            <h1
-                                class="font-bold tracking-wide text-center text-base sm:text-lg xl:text-xl font-poppins">
-                                Farrel</h1>
-                            <p class="text-center text-slate-400 font-poppins text-xs md:text-sm">Dept. Informatika</p>
+                    @foreach ($users as $user)
+                        <div class="flex flex-col gap-3 w-fit text-center hover:bottom-2 transition-all">
+                            <div class="background w-12 h-12 xl:w-20 xl:h-20 bg-center bg-cover rounded-full m-auto shadow-sm"
+                                style="background-image: url('{{ asset($user->foto_ktp ? 'storage/' . $user->foto_ktp : 'assets/default-user.jpg') }}');">
+                            </div>
+                            <div class="flex flex-col">
+                                <h1 class="font-bold tracking-wide text-center text-base sm:text-lg xl:text-xl font-poppins">
+                                    {{ $user->nama }}
+                                </h1>
+                                <p class="text-center text-slate-400 font-poppins text-xs md:text-sm">
+                                    {{ $user->departemen }}
+                                </p>
+                            </div>
                         </div>
-                    </div>
-                    <div class="flex flex-col gap-3 w-fit text-center hover:bottom-2 transition-all">
-                        <div class="background w-12 h-12 xl:w-20 xl:h-20 bg-center bg-cover rounded-full m-auto shadow-sm"
-                            style=" 
-                            background-image: url(../assets/user\ \(3\).jpg);"></div>
-                        <div class="flex flex-col">
-                            <h1
-                                class="font-bold tracking-wide text-center text-base sm:text-lg xl:text-xl font-poppins">
-                                Adelio</h1>
-                            <p class="text-center text-slate-400 font-poppins text-xs md:text-sm">Dept. Informatika</p>
-                        </div>
-                    </div>
-                    <div class="flex flex-col gap-3 w-fit text-center hover:bottom-2 transition-all">
-                        <div class="background w-12 h-12 xl:w-20 xl:h-20 bg-center bg-cover rounded-full m-auto shadow-sm"
-                            style=" 
-                            background-image: url(../assets/user\ \(4\).jpg);"></div>
-                        <div class="flex flex-col">
-                            <h1
-                                class="font-bold tracking-wide text-center text-base sm:text-lg xl:text-xl font-poppins">
-                                Asman</h1>
-                            <p class="text-center text-slate-400 font-poppins text-xs md:text-sm">Dept. Informatika</p>
-                        </div>
-                    </div>
-                    <a href="#"
-                        class="flex flex-col gap-3 w-fit text-center my-auto relative hover:bottom-2 md:hover:bottom-0 transition-all">
-                        <ion-icon name="add"
-                            class="md:text-3xl xl:text-7xl font-bold rounded-full p-2 hover:bg-slate-100"></ion-icon>
-                        <p
-                            class="font-bold font-poppins tracking-wide text-center text-xs text-slate-400 hover:text-primary2">
-                            More..</p>
-                    </a>
+                    @endforeach
+                    <!-- Button Tambah User -->
+                <a href="#" class="flex flex-col gap-3 w-fit text-center my-auto relative hover:bottom-2 md:hover:bottom-0 transition-all">
+                    <ion-icon name="add"
+                        class="md:text-3xl xl:text-7xl font-bold rounded-full p-2 hover:bg-slate-100"></ion-icon>
+                    <p class="font-bold font-poppins tracking-wide text-center text-xs text-slate-400 hover:text-primary2">
+                        More..
+                    </p>
+                </a>
+
                 </div>
             </div>
 
@@ -343,14 +299,7 @@
         closePopup.addEventListener('click', () => {
             popup.classList.add('hidden');
         });
-
-        // Submit form
-        document.getElementById('popupForm').addEventListener('submit', (e) => {
-            e.preventDefault();
-            alert('Form submitted!');
-            popup.classList.add('hidden');
-        });
-    </script>
+    </script>    
 </body>
 
 
