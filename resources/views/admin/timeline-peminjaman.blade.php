@@ -142,140 +142,101 @@
             </div>
 
             <!-- Konten Utama -->
-            <div class="flex flex-col sm:flex-row justify-between mt-5 gap-5">
-                <div
-                    class="flex justify-between text-primary2 h-fit w-full sm:w-1/2 xl:w-80 p-5 xl:p-10 rounded-md bg-white shadow-md hover:bg-primary2 hover:text-white">
-                    <div class="flex flex-col gap-1 md:gap-2">
-                        <h1 class="font-bold text-xl xl:text-3xl">10</h1>
-                        <p class="text-lg xl:text-lg">Available</p>
-                    </div>
-
-                    <p class="text-center flex items-center w-fit"><ion-icon name="podium"
-                            class="text-3xl xl:text-6xl"></ion-icon>
-                    </p>
-                </div>
-
-                <div
-                    class="flex text-primary2 justify-between h-fit w-full sm:w-1/2 xl:w-80 p-5 xl:p-10 rounded-md bg-white shadow-md hover:bg-primary2 hover:text-white">
-                    <div class="flex flex-col gap-1 md:gap-2">
-                        <h1 class="font-bold text-xl xl:text-3xl">7</h1>
-                        <p class="text-lg xl:text-lg">Digunakan</p>
-                    </div>
-
-                    <p class="text-center flex items-center w-fit"><ion-icon name="map"
-                            class="text-3xl xl:text-6xl"></ion-icon></p>
-                </div>
-
-                <div
-                    class="flex justify-between text-primary2 h-fit w-full sm:w-1/2 xl:w-80 p-5 xl:p-10 rounded-md bg-white shadow-md hover:bg-primary2 hover:text-white">
-                    <div class="flex flex-col gap-1 md:gap-2">
-                        <h1 class="font-bold text-xl xl:text-3xl">3</h1>
-                        <p class="text-lg xl:text-lg">Perbaikan</p>
-                    </div>
-
-                    <p class="text-center flex items-center w-fit"><ion-icon name="cog"
-                            class="text-3xl xl:text-6xl"></ion-icon></p>
-                </div>
-            </div>
-
-            <!-- USER -->
-            <div class="flex mt-8 flex-col">
-                <h1 class="font-semibold font-poppins text-xl">Users</h1>
-                <div class="flex flex-wrap justify-start mt-2 gap-12 bg-white shadow-md px-6 md:px-8 xl:px-12 py-5 rounded-xl">
-                    @foreach ($users as $user)
-                        <div class="flex flex-col gap-3 w-fit text-center hover:bottom-2 transition-all">
-                            <div class="background w-12 h-12 xl:w-20 xl:h-20 bg-center bg-cover rounded-full m-auto shadow-sm"
-                                style="background-image: url('https://ui-avatars.com/api/?name={{ urlencode($user->nama) }}&background=random&color=fff');">
-                            </div>
-                            <div class="flex flex-col">
-                                <h1 class="font-bold tracking-wide text-center text-base sm:text-lg xl:text-xl font-poppins">
-                                    {{ $user->nama }}
-                                </h1>
-                                <p class="text-center text-slate-400 font-poppins text-xs md:text-sm">
-                                    {{ $user->departemen }}
-                                </p>
-                            </div>
-                        </div>
-                    @endforeach
-                    <!-- Button Tambah User -->
-                    @can('admin')
-                        <a href="/tambah-users"
-                            class="flex flex-col gap-3 w-fit text-center my-auto relative hover:bottom-2 md:hover:bottom-0 transition-all">
-                            <ion-icon name="add"
-                                class="md:text-3xl xl:text-7xl font-bold rounded-full p-2 hover:bg-slate-100"></ion-icon>
-                            <p class="font-bold font-poppins tracking-wide text-center text-xs text-slate-400 hover:text-primary2">
-                                Selengkapnya..
-                            </p>
-                        </a>
-                    @endcan
-                </div>                           
-            </div>            
-
+            <!-- TIMELINE -->
             <div class="relative overflow-x-auto shadow-md rounded-lg mt-8">
-                <h1 class="text-xl font-semibold font-poppins mb-5">Timeline</h1>
+
+                <div class="flex justify-between whitespace-nowrap gap-2">
+                    <a href="pinjam-kendaraan"
+                        class="bg-blue-500 text-white w-fit h-fit px-2 py-2 rounded-md">Pinjam
+                        Sekarang
+                    </a>
+
+                    <div class="flex mb-2 items-center ml-auto w-fit">
+                        <input type="text" id="search" placeholder="Cari..." class="p-2 border rounded-md mr-2"
+                            onkeyup="searchTable()">
+
+                        <label for="sort" class="mr-2 font-semibold">Sort by</label>
+                        <select name="sort" id="sort" class="p-2 border rounded-md cursor-pointer">
+                            <option value="terbaru">Terbaru</option>
+                            <option value="terlama">Terlama</option>
+                        </select>
+                    </div>
+
+                    <script>
+                        function searchTable() {
+                            const input = document.getElementById('search').value.toLowerCase();
+                            const rows = document.querySelectorAll('tbody tr');
+
+                            rows.forEach(row => {
+                                const text = row.textContent.toLowerCase();
+                                row.style.display = text.includes(input) ? '' : 'none';
+                            });
+                        }
+                    </script>
+                </div>
+
                 <table class="min-w-[700px] w-full text-sm text-left rtl:text-right text-primary2">
                     <thead class="text-xs text-gray-700 uppercase bg-white">
                         <tr>
+                            <th scope="col" class="px-4 py-3">Nama Peminjam</th>
                             <th scope="col" class="px-4 py-3">Plat Nomor</th>
-                            <th scope="col" class="px-4 py-3">Merk/Seri</th>
-                            <th scope="col" class="px-4 py-3">Kategori</th>
-                            <th scope="col" class="px-4 py-3">Peminjam</th>
+                            <th scope="col" class="px-4 py-3">Merk</th>
+                            <th scope="col" class="px-4 py-3">Seri</th>
+                            <th scope="col" class="px-4 py-3">Tujuan Peminjaman</th>
+                            <th scope="col" class="px-4 py-3">Tanggal Awal</th>
+                            <th scope="col" class="px-4 py-3">Tanggal Akhir</th>
                             <th scope="col" class="px-4 py-3">Status</th>
-                            <th scope="col" class="px-4 py-3">Action</th>
                         </tr>
                     </thead>
                     <tbody>
-                        <tr class="bg-white border-b border-gray-200">
-                            <th scope="row" class="px-4 py-4 font-medium text-primary2">BP1234</th>
-                            <td class="px-4 py-4">Avanza</td>
-                            <td class="px-4 py-4">Mobil</td>
-                            <td class="px-4 py-4">Abdul</td>
-                            <td class="px-4 py-4">
-                                <p class="bg-yellow-100 rounded-full w-fit px-2 font-semibold">Digunakan</p>
-                            </td>
-                            <td class="px-4 py-4 space-x-2">
-                                <a href="#"
-                                    class="font-medium bg-yellow-300 px-3 py-1 rounded-lg hover:opacity-60">Edit</a>
-                                <a href="#"
-                                    class="font-medium bg-red-500 px-3 py-1 rounded-lg hover:opacity-60">Hapus</a>
-                            </td>
-                        </tr>
-                        <tr class="bg-white border-b border-gray-200">
-                            <th scope="row" class="px-4 py-4 font-medium text-primary2">BP1234</th>
-                            <td class="px-4 py-4">Avanza</td>
-                            <td class="px-4 py-4">Mobil</td>
-                            <td class="px-4 py-4">Abdul</td>
-                            <td class="px-4 py-4">
-                                <p class="bg-red-400 rounded-full w-fit px-2 font-semibold">Perbaikan</p>
-                            </td>
-                            <td class="px-4 py-4 space-x-2">
-                                <a href="#"
-                                    class="font-medium bg-yellow-300 px-3 py-1 rounded-lg hover:opacity-60">Edit</a>
-                                <a href="#"
-                                    class="font-medium bg-red-500 px-3 py-1 rounded-lg hover:opacity-60">Hapus</a>
-                            </td>
-                        </tr>
-                        <tr class="bg-white border-b border-gray-200">
-                            <th scope="row" class="px-4 py-4 font-medium text-primary2">BP1234</th>
-                            <td class="px-4 py-4">Avanza</td>
-                            <td class="px-4 py-4">Mobil</td>
-                            <td class="px-4 py-4">Abdul</td>
-                            <td class="px-4 py-4">
-                                <p class="bg-green-300 rounded-full w-fit px-2 font-semibold">Available</p>
-                            </td>
-                            <td class="px-4 py-4 space-x-2">
-                                <a href="#"
-                                    class="font-medium bg-yellow-300 px-3 py-1 rounded-lg hover:opacity-60">Edit</a>
-                                <a href="#"
-                                    class="font-medium bg-red-500 px-3 py-1 rounded-lg hover:opacity-60">Hapus</a>
-                            </td>
-                        </tr>
+                        @if($peminjaman->isEmpty())
+                            <tr>
+                                <td colspan="9" class="px-4 py-4 text-center text-gray-500">Data peminjaman tidak ada</td>
+                            </tr>
+                        @else
+                            @foreach($peminjaman as $item)
+                                <tr class="bg-white border-b border-gray-200">
+                                    <td class="px-4 py-4">{{ $item->user->nama }}</td>
+                                    <td class="px-4 py-4">{{ $item->kendaraan->no_plat }}</td>
+                                    <td class="px-4 py-4">{{ $item->kendaraan->merk }}</td>
+                                    <td class="px-4 py-4">{{ $item->kendaraan->seri }}</td>
+                                    <td class="px-4 py-4">{{ $item->tujuan_peminjaman }}</td>
+                                    <td class="px-4 py-4">{{ $item->tanggal_awal_peminjaman }}</td>
+                                    <td class="px-4 py-4">{{ $item->tanggal_akhir_peminjaman }}</td>
+                                    <td class="px-4 py-4">
+                                        @switch($item->status_peminjaman)
+                                            @case('Pending')
+                                                <p class="bg-yellow-300 text-black rounded-full w-fit px-2 py-1 font-semibold">
+                                                    {{ $item->status_peminjaman }}
+                                                </p>
+                                                @break
+                                    
+                                            @case('Di Terima')
+                                                <p class="bg-green-300 text-black rounded-full w-fit px-2 py-1 font-semibold">
+                                                    {{ $item->status_peminjaman }}
+                                                </p>
+                                                @break
+                                    
+                                            @case('Di Tolak')
+                                                <p class="bg-red-400 text-black rounded-full w-fit px-2 py-1 font-semibold">
+                                                    {{ $item->status_peminjaman }}
+                                                </p>
+                                                @break
+                                    
+                                            @default
+                                                <p class="bg-gray-300 text-black rounded-full w-fit px-2 font-semibold">
+                                                    Tidak Diketahui
+                                                </p>
+                                        @endswitch
+                                    </td>
+                                </tr>
+                            @endforeach
+                        @endif
                     </tbody>
                 </table>
+                
             </div>
-            <div class="m-auto w-fit my-5">
-                <a href="/timeline-peminjaman" class="font-semibold font-poppins underline">More..</a>
-            </div>
+
         </div>
     </div>
 
@@ -292,8 +253,7 @@
             sidebar.classList.add('-translate-x-full');
         });
 
-        // popup Profile
-
+        // Ambil elemen yang dibutuhkan
         const openPopup = document.getElementById('openPopupProfile');
         const closePopup = document.getElementById('closePopupProfile');
         const popup = document.getElementById('popupProfile');
@@ -306,24 +266,6 @@
         // Tutup popup
         closePopup.addEventListener('click', () => {
             popup.classList.add('hidden');
-        });
-    </script>
-
-    <script>
-        const togglePass = document.getElementById('togglePass');
-        const passInput = document.getElementById('pass');
-        const eyeIcon = document.getElementById('eyeIcon');
-    
-        togglePass.addEventListener('click', function () {
-            // Jika password sedang disembunyikan
-            if (passInput.type === 'password') {
-                passInput.type = 'text';
-                eyeIcon.setAttribute('name', 'eye'); // Ganti ikon
-            } else {
-                // Jika password sedang ditampilkan
-                passInput.type = 'password';
-                eyeIcon.setAttribute('name', 'eye-off'); // Ganti ikon
-            }
         });
     </script>
 </body>

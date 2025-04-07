@@ -4,9 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Dashboard | Admin</title>
+    <title>Dashboard | Users</title>
     @vite('resources/css/app.css')
     <script src="https://unpkg.com/ionicons@4.5.10-0/dist/ionicons.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </head>
 
 <body class="bg-slate-200">
@@ -57,7 +58,8 @@
 
             <!-- Navbar -->
             <div class="flex justify-between">
-                <h1 class="font-poppins font-bold text-xl sm:text-2xl flex items-center">Analiytics</h1>
+                <h1 class="font-poppins font-bold text-xl sm:text-2xl flex items-center">Pinjam Kendaraan
+                </h1>
 
                 <button class="flex w-fit gap-3" id="openPopupProfile">
                     <div class="flex flex-col text-sm">
@@ -142,143 +144,55 @@
             </div>
 
             <!-- Konten Utama -->
-            <div class="flex flex-col sm:flex-row justify-between mt-5 gap-5">
-                <div
-                    class="flex justify-between text-primary2 h-fit w-full sm:w-1/2 xl:w-80 p-5 xl:p-10 rounded-md bg-white shadow-md hover:bg-primary2 hover:text-white">
-                    <div class="flex flex-col gap-1 md:gap-2">
-                        <h1 class="font-bold text-xl xl:text-3xl">10</h1>
-                        <p class="text-lg xl:text-lg">Available</p>
-                    </div>
-
-                    <p class="text-center flex items-center w-fit"><ion-icon name="podium"
-                            class="text-3xl xl:text-6xl"></ion-icon>
-                    </p>
-                </div>
-
-                <div
-                    class="flex text-primary2 justify-between h-fit w-full sm:w-1/2 xl:w-80 p-5 xl:p-10 rounded-md bg-white shadow-md hover:bg-primary2 hover:text-white">
-                    <div class="flex flex-col gap-1 md:gap-2">
-                        <h1 class="font-bold text-xl xl:text-3xl">7</h1>
-                        <p class="text-lg xl:text-lg">Digunakan</p>
-                    </div>
-
-                    <p class="text-center flex items-center w-fit"><ion-icon name="map"
-                            class="text-3xl xl:text-6xl"></ion-icon></p>
-                </div>
-
-                <div
-                    class="flex justify-between text-primary2 h-fit w-full sm:w-1/2 xl:w-80 p-5 xl:p-10 rounded-md bg-white shadow-md hover:bg-primary2 hover:text-white">
-                    <div class="flex flex-col gap-1 md:gap-2">
-                        <h1 class="font-bold text-xl xl:text-3xl">3</h1>
-                        <p class="text-lg xl:text-lg">Perbaikan</p>
-                    </div>
-
-                    <p class="text-center flex items-center w-fit"><ion-icon name="cog"
-                            class="text-3xl xl:text-6xl"></ion-icon></p>
-                </div>
-            </div>
-
-            <!-- USER -->
-            <div class="flex mt-8 flex-col">
-                <h1 class="font-semibold font-poppins text-xl">Users</h1>
-                <div class="flex flex-wrap justify-start mt-2 gap-12 bg-white shadow-md px-6 md:px-8 xl:px-12 py-5 rounded-xl">
-                    @foreach ($users as $user)
-                        <div class="flex flex-col gap-3 w-fit text-center hover:bottom-2 transition-all">
-                            <div class="background w-12 h-12 xl:w-20 xl:h-20 bg-center bg-cover rounded-full m-auto shadow-sm"
-                                style="background-image: url('https://ui-avatars.com/api/?name={{ urlencode($user->nama) }}&background=random&color=fff');">
-                            </div>
-                            <div class="flex flex-col">
-                                <h1 class="font-bold tracking-wide text-center text-base sm:text-lg xl:text-xl font-poppins">
-                                    {{ $user->nama }}
-                                </h1>
-                                <p class="text-center text-slate-400 font-poppins text-xs md:text-sm">
-                                    {{ $user->departemen }}
-                                </p>
+            <div class="relative overflow-x-auto mt-8">
+                <div class="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full max-h-[90vh] overflow-y-auto m-auto">
+                    <h2 class="text-xl font-semibold mb-4">Pinjam Kendaraan</h2>
+                    <form id="popupFormPinjam1" class="font-normal" action="{{ route('pinjam-kendaraan.store') }}" method="POST">
+                        @csrf
+                        <input type="hidden" name="id_kendaraan" value="{{ $kendaraan->id }}">
+                        <input type="hidden" name="id_user" value="{{ $user->id }}">
+                
+                        <div class="mb-4">
+                            <label for="merk" class="block font-semibold text-sm">Merk</label>
+                            <input type="text" id="merk" name="merk" required value="{{ $kendaraan->merk }}" readonly
+                                class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400">
+                        </div>
+                        <div class="mb-4">
+                            <label for="seri" class="block font-semibold text-sm">Seri</label>
+                            <input type="text" id="seri" name="seri" required value="{{ $kendaraan->seri }}" readonly
+                                class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400">
+                        </div>
+                        <div class="mb-4">
+                            <label for="tanggal_awal_peminjaman" class="block font-semibold text-sm">Estimasi Awal</label>
+                            <div class="flex flex-col gap-2">
+                                <input type="datetime-local" id="tanggal_awal_peminjaman" name="tanggal_awal_peminjaman" required
+                                    class="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 w-full">
+                                
+                                <label for="tanggal_akhir_peminjaman" class="block font-semibold text-sm">Estimasi Akhir</label>
+                                <input type="datetime-local" id="tanggal_akhir_peminjaman" name="tanggal_akhir_peminjaman" required
+                                    class="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400 w-full">
                             </div>
                         </div>
-                    @endforeach
-                    <!-- Button Tambah User -->
-                    @can('admin')
-                        <a href="/tambah-users"
-                            class="flex flex-col gap-3 w-fit text-center my-auto relative hover:bottom-2 md:hover:bottom-0 transition-all">
-                            <ion-icon name="add"
-                                class="md:text-3xl xl:text-7xl font-bold rounded-full p-2 hover:bg-slate-100"></ion-icon>
-                            <p class="font-bold font-poppins tracking-wide text-center text-xs text-slate-400 hover:text-primary2">
-                                Selengkapnya..
-                            </p>
-                        </a>
-                    @endcan
-                </div>                           
-            </div>            
+                        <div class="mb4">
+                            <label for="tujuan" class="block text-sm font-medium">Tujuan Peminjaman</label>
+                            <textarea name="tujuan_peminjaman" id="tujuan_peminjaman"
+                                class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"></textarea>
+                        </div>
 
-            <div class="relative overflow-x-auto shadow-md rounded-lg mt-8">
-                <h1 class="text-xl font-semibold font-poppins mb-5">Timeline</h1>
-                <table class="min-w-[700px] w-full text-sm text-left rtl:text-right text-primary2">
-                    <thead class="text-xs text-gray-700 uppercase bg-white">
-                        <tr>
-                            <th scope="col" class="px-4 py-3">Plat Nomor</th>
-                            <th scope="col" class="px-4 py-3">Merk/Seri</th>
-                            <th scope="col" class="px-4 py-3">Kategori</th>
-                            <th scope="col" class="px-4 py-3">Peminjam</th>
-                            <th scope="col" class="px-4 py-3">Status</th>
-                            <th scope="col" class="px-4 py-3">Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="bg-white border-b border-gray-200">
-                            <th scope="row" class="px-4 py-4 font-medium text-primary2">BP1234</th>
-                            <td class="px-4 py-4">Avanza</td>
-                            <td class="px-4 py-4">Mobil</td>
-                            <td class="px-4 py-4">Abdul</td>
-                            <td class="px-4 py-4">
-                                <p class="bg-yellow-100 rounded-full w-fit px-2 font-semibold">Digunakan</p>
-                            </td>
-                            <td class="px-4 py-4 space-x-2">
-                                <a href="#"
-                                    class="font-medium bg-yellow-300 px-3 py-1 rounded-lg hover:opacity-60">Edit</a>
-                                <a href="#"
-                                    class="font-medium bg-red-500 px-3 py-1 rounded-lg hover:opacity-60">Hapus</a>
-                            </td>
-                        </tr>
-                        <tr class="bg-white border-b border-gray-200">
-                            <th scope="row" class="px-4 py-4 font-medium text-primary2">BP1234</th>
-                            <td class="px-4 py-4">Avanza</td>
-                            <td class="px-4 py-4">Mobil</td>
-                            <td class="px-4 py-4">Abdul</td>
-                            <td class="px-4 py-4">
-                                <p class="bg-red-400 rounded-full w-fit px-2 font-semibold">Perbaikan</p>
-                            </td>
-                            <td class="px-4 py-4 space-x-2">
-                                <a href="#"
-                                    class="font-medium bg-yellow-300 px-3 py-1 rounded-lg hover:opacity-60">Edit</a>
-                                <a href="#"
-                                    class="font-medium bg-red-500 px-3 py-1 rounded-lg hover:opacity-60">Hapus</a>
-                            </td>
-                        </tr>
-                        <tr class="bg-white border-b border-gray-200">
-                            <th scope="row" class="px-4 py-4 font-medium text-primary2">BP1234</th>
-                            <td class="px-4 py-4">Avanza</td>
-                            <td class="px-4 py-4">Mobil</td>
-                            <td class="px-4 py-4">Abdul</td>
-                            <td class="px-4 py-4">
-                                <p class="bg-green-300 rounded-full w-fit px-2 font-semibold">Available</p>
-                            </td>
-                            <td class="px-4 py-4 space-x-2">
-                                <a href="#"
-                                    class="font-medium bg-yellow-300 px-3 py-1 rounded-lg hover:opacity-60">Edit</a>
-                                <a href="#"
-                                    class="font-medium bg-red-500 px-3 py-1 rounded-lg hover:opacity-60">Hapus</a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <div class="m-auto w-fit my-5">
-                <a href="/timeline-peminjaman" class="font-semibold font-poppins underline">More..</a>
+                        <input type="text" name="status_peminjaman" value="Pending" hidden>
+
+                        <div class="flex justify-end space-x-2">
+                            <a href="/pinjam-kendaraan"
+                                class="bg-gray-300 text-black px-4 py-2 rounded-md">Cancel</a>
+                            <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded-md">Submit</button>
+                        </div>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
 
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <script>
         const sidebar = document.getElementById('sidebar');
         const openSidebar = document.getElementById('openSidebar');
@@ -307,25 +221,49 @@
         closePopup.addEventListener('click', () => {
             popup.classList.add('hidden');
         });
+
+        // Submit form
+        document.getElementById('popupForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Form submitted!');
+            popup.classList.add('hidden');
+        });
+
     </script>
 
     <script>
-        const togglePass = document.getElementById('togglePass');
-        const passInput = document.getElementById('pass');
-        const eyeIcon = document.getElementById('eyeIcon');
-    
-        togglePass.addEventListener('click', function () {
-            // Jika password sedang disembunyikan
-            if (passInput.type === 'password') {
-                passInput.type = 'text';
-                eyeIcon.setAttribute('name', 'eye'); // Ganti ikon
-            } else {
-                // Jika password sedang ditampilkan
-                passInput.type = 'password';
-                eyeIcon.setAttribute('name', 'eye-off'); // Ganti ikon
-            }
+    $(document).ready(function () {
+        $("#popupFormPinjam1").submit(function (e) {
+            e.preventDefault(); // Mencegah reload halaman
+
+            $.ajax({
+                url: $(this).attr("action"),
+                type: "POST",
+                data: $(this).serialize(),
+                dataType: "json", // Pastikan response adalah JSON
+                success: function (response) {
+                    if (response.status === "success") {
+                        Swal.fire({
+                            title: "Berhasil!",
+                            text: response.message,
+                            icon: "success",
+                            confirmButtonText: "OK"
+                        }).then(() => {
+                            window.location.href = "/timeline-peminjaman"; // Redirect ke halaman lain
+                        });
+                    } else {
+                        Swal.fire("Error!", response.message, "error");
+                    }
+                },
+                error: function (xhr) {
+                    console.log(xhr.responseText); // Cek error di console
+                    Swal.fire("Error!", "Terjadi kesalahan saat menyimpan data.", "error");
+                }
+            });
         });
+    });
     </script>
+    
 </body>
 
 

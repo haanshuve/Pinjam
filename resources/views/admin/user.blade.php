@@ -142,139 +142,158 @@
             </div>
 
             <!-- Konten Utama -->
-            <div class="flex flex-col sm:flex-row justify-between mt-5 gap-5">
-                <div
-                    class="flex justify-between text-primary2 h-fit w-full sm:w-1/2 xl:w-80 p-5 xl:p-10 rounded-md bg-white shadow-md hover:bg-primary2 hover:text-white">
-                    <div class="flex flex-col gap-1 md:gap-2">
-                        <h1 class="font-bold text-xl xl:text-3xl">10</h1>
-                        <p class="text-lg xl:text-lg">Available</p>
-                    </div>
-
-                    <p class="text-center flex items-center w-fit"><ion-icon name="podium"
-                            class="text-3xl xl:text-6xl"></ion-icon>
-                    </p>
-                </div>
-
-                <div
-                    class="flex text-primary2 justify-between h-fit w-full sm:w-1/2 xl:w-80 p-5 xl:p-10 rounded-md bg-white shadow-md hover:bg-primary2 hover:text-white">
-                    <div class="flex flex-col gap-1 md:gap-2">
-                        <h1 class="font-bold text-xl xl:text-3xl">7</h1>
-                        <p class="text-lg xl:text-lg">Digunakan</p>
-                    </div>
-
-                    <p class="text-center flex items-center w-fit"><ion-icon name="map"
-                            class="text-3xl xl:text-6xl"></ion-icon></p>
-                </div>
-
-                <div
-                    class="flex justify-between text-primary2 h-fit w-full sm:w-1/2 xl:w-80 p-5 xl:p-10 rounded-md bg-white shadow-md hover:bg-primary2 hover:text-white">
-                    <div class="flex flex-col gap-1 md:gap-2">
-                        <h1 class="font-bold text-xl xl:text-3xl">3</h1>
-                        <p class="text-lg xl:text-lg">Perbaikan</p>
-                    </div>
-
-                    <p class="text-center flex items-center w-fit"><ion-icon name="cog"
-                            class="text-3xl xl:text-6xl"></ion-icon></p>
-                </div>
-            </div>
-
-            <!-- USER -->
-            <div class="flex mt-8 flex-col">
-                <h1 class="font-semibold font-poppins text-xl">Users</h1>
-                <div class="flex flex-wrap justify-start mt-2 gap-12 bg-white shadow-md px-6 md:px-8 xl:px-12 py-5 rounded-xl">
-                    @foreach ($users as $user)
-                        <div class="flex flex-col gap-3 w-fit text-center hover:bottom-2 transition-all">
-                            <div class="background w-12 h-12 xl:w-20 xl:h-20 bg-center bg-cover rounded-full m-auto shadow-sm"
-                                style="background-image: url('https://ui-avatars.com/api/?name={{ urlencode($user->nama) }}&background=random&color=fff');">
-                            </div>
-                            <div class="flex flex-col">
-                                <h1 class="font-bold tracking-wide text-center text-base sm:text-lg xl:text-xl font-poppins">
-                                    {{ $user->nama }}
-                                </h1>
-                                <p class="text-center text-slate-400 font-poppins text-xs md:text-sm">
-                                    {{ $user->departemen }}
-                                </p>
-                            </div>
-                        </div>
-                    @endforeach
-                    <!-- Button Tambah User -->
-                    @can('admin')
-                        <a href="/tambah-users"
-                            class="flex flex-col gap-3 w-fit text-center my-auto relative hover:bottom-2 md:hover:bottom-0 transition-all">
-                            <ion-icon name="add"
-                                class="md:text-3xl xl:text-7xl font-bold rounded-full p-2 hover:bg-slate-100"></ion-icon>
-                            <p class="font-bold font-poppins tracking-wide text-center text-xs text-slate-400 hover:text-primary2">
-                                Selengkapnya..
-                            </p>
-                        </a>
-                    @endcan
-                </div>                           
-            </div>            
-
             <div class="relative overflow-x-auto shadow-md rounded-lg mt-8">
-                <h1 class="text-xl font-semibold font-poppins mb-5">Timeline</h1>
+
+
+                <div class="flex mb-2 items-center ml-auto w-fit">
+                    <!-- Input Pencarian -->
+                    <input type="text" id="search" placeholder="Cari..." class="p-2 border rounded-md mr-2"
+                        onkeyup="searchTable()">
+
+                    <label for="sort" class="mr-2 font-semibold">Sort by</label>
+                    <select name="sort" id="sort" class="p-2 border rounded-md cursor-pointer">
+                        <option value="terbaru">Terbaru</option>
+                        <option value="terlama">Terlama</option>
+                    </select>
+                </div>
+
+                <script>
+                    // Fungsi Pencarian di Tabel
+                    function searchTable() {
+                        const input = document.getElementById('search').value.toLowerCase();
+                        const rows = document.querySelectorAll('tbody tr');
+
+                        rows.forEach(row => {
+                            const text = row.textContent.toLowerCase();
+                            row.style.display = text.includes(input) ? '' : 'none';
+                        });
+                    }
+                </script>
+
                 <table class="min-w-[700px] w-full text-sm text-left rtl:text-right text-primary2">
                     <thead class="text-xs text-gray-700 uppercase bg-white">
                         <tr>
-                            <th scope="col" class="px-4 py-3">Plat Nomor</th>
-                            <th scope="col" class="px-4 py-3">Merk/Seri</th>
-                            <th scope="col" class="px-4 py-3">Kategori</th>
-                            <th scope="col" class="px-4 py-3">Peminjam</th>
-                            <th scope="col" class="px-4 py-3">Status</th>
-                            <th scope="col" class="px-4 py-3">Action</th>
+                            <th scope="col" class="px-4 py-3 text-base">Users</th>
+                            <th scope="col" class="px-4 py-3"></th>
+                            <th scope="col" class="px-4 py-3"></th>
+                            <th scope="col" class="px-4 py-3"></th>
+                            <th scope="col" class="px-4 py-3"></th>
+                            <th scope="col" class="px-4 py-3"></th>
+                            <th scope="col" class="px-4 py-3"></th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr class="bg-white border-b border-gray-200">
-                            <th scope="row" class="px-4 py-4 font-medium text-primary2">BP1234</th>
-                            <td class="px-4 py-4">Avanza</td>
-                            <td class="px-4 py-4">Mobil</td>
-                            <td class="px-4 py-4">Abdul</td>
-                            <td class="px-4 py-4">
-                                <p class="bg-yellow-100 rounded-full w-fit px-2 font-semibold">Digunakan</p>
-                            </td>
+                            <th scope="row" class="px-4 py-4 font-medium text-primary2"><img
+                                    src="../assets/user (1).jpg" alt="" class="rounded-full w-12 h-12"></th>
+                            <th scope="row" class="px-4 py-4 font-semibold text-primary2 whitespace-nowrap">Farrel
+                                Adelio
+                                Asman</th>
+                            <td class="px-4 py-4">farreladelioasman@gmail.com</td>
+                            <td class="px-4 py-4">12345xxxxxxxx</td>
+                            <td class="px-4 py-4">Informatika</td>
+                            <td class="px-4 py-4">Admin</td>
                             <td class="px-4 py-4 space-x-2">
-                                <a href="#"
-                                    class="font-medium bg-yellow-300 px-3 py-1 rounded-lg hover:opacity-60">Edit</a>
-                                <a href="#"
-                                    class="font-medium bg-red-500 px-3 py-1 rounded-lg hover:opacity-60">Hapus</a>
+                                <button class="font-medium bg-yellow-400 px-3 py-1 rounded-lg hover:opacity-60"
+                                    id="Edit">Edit</button>
+                                <button class="font-medium bg-red-500 px-3 py-1 rounded-lg hover:opacity-60"
+                                    id="">Hapus</button>
                             </td>
                         </tr>
                         <tr class="bg-white border-b border-gray-200">
-                            <th scope="row" class="px-4 py-4 font-medium text-primary2">BP1234</th>
-                            <td class="px-4 py-4">Avanza</td>
-                            <td class="px-4 py-4">Mobil</td>
-                            <td class="px-4 py-4">Abdul</td>
-                            <td class="px-4 py-4">
-                                <p class="bg-red-400 rounded-full w-fit px-2 font-semibold">Perbaikan</p>
-                            </td>
+                            <th scope="row" class="px-4 py-4 font-medium text-primary2"><img
+                                    src="../assets/user (2).jpg" alt="" class="rounded-full w-12 h-12"></th>
+                            <th scope="row" class="px-4 py-4 font-semibold text-primary2 whitespace-nowrap">Zoro</th>
+                            <td class="px-4 py-4">bangzoro@gmail.com</td>
+                            <td class="px-4 py-4">12345xxxxxxxx</td>
+                            <td class="px-4 py-4">Mesin</td>
+                            <td class="px-4 py-4">Staff</td>
                             <td class="px-4 py-4 space-x-2">
-                                <a href="#"
-                                    class="font-medium bg-yellow-300 px-3 py-1 rounded-lg hover:opacity-60">Edit</a>
-                                <a href="#"
-                                    class="font-medium bg-red-500 px-3 py-1 rounded-lg hover:opacity-60">Hapus</a>
-                            </td>
-                        </tr>
-                        <tr class="bg-white border-b border-gray-200">
-                            <th scope="row" class="px-4 py-4 font-medium text-primary2">BP1234</th>
-                            <td class="px-4 py-4">Avanza</td>
-                            <td class="px-4 py-4">Mobil</td>
-                            <td class="px-4 py-4">Abdul</td>
-                            <td class="px-4 py-4">
-                                <p class="bg-green-300 rounded-full w-fit px-2 font-semibold">Available</p>
-                            </td>
-                            <td class="px-4 py-4 space-x-2">
-                                <a href="#"
-                                    class="font-medium bg-yellow-300 px-3 py-1 rounded-lg hover:opacity-60">Edit</a>
-                                <a href="#"
-                                    class="font-medium bg-red-500 px-3 py-1 rounded-lg hover:opacity-60">Hapus</a>
+                                <button class="font-medium bg-yellow-400 px-3 py-1 rounded-lg hover:opacity-60"
+                                    id="openPopupUser">Edit</button>
+                                <button class="font-medium bg-red-500 px-3 py-1 rounded-lg hover:opacity-60"
+                                    id="">Hapus</button>
                             </td>
                         </tr>
                     </tbody>
                 </table>
-            </div>
-            <div class="m-auto w-fit my-5">
-                <a href="/timeline-peminjaman" class="font-semibold font-poppins underline">More..</a>
+
+                <!-- Popup (Modal) -->
+                <div id="popupUser"
+                    class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+                    <div class="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full max-h-[90vh] overflow-y-auto">
+                        <h2 class="text-xl font-semibold mb-4">Form: Data Diri</h2>
+
+                        <form id="popupFormUser">
+                            <div class="mb-4">
+                                <label for="name" class="block text-sm font-medium">Nama</label>
+                                <input type="text" id="name" name="name" required
+                                    class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                    value="Farrel Adelio Asman">
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="email" class="block text-sm font-medium">Email</label>
+                                <input type="email" id="email" name="email" required
+                                    class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                    value="farreladelioasman@gmail.com">
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="nip" class="block text-sm font-medium">NIP</label>
+                                <input type="nip" id="nip" name="nip" required
+                                    class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                    maxlength="18" value="11111111111111111">
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="no-hp" class="block text-sm font-medium">No Whatsapp</label>
+                                <input type="text" id="no-hp" name="no-hp" required
+                                    class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                    maxlength="18" value="089686968886">
+                            </div>
+
+                            <div class="mb-4 relative">
+                                <label for="pass" class="block text-sm font-medium">Password</label>
+                                <input type="password" id="pass" name="pass" required
+                                    class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400"
+                                    value="farrel@2025">
+
+                                <!-- Tombol Show/Hide dengan Ionicons -->
+                                <button type="button" id="togglePass"
+                                    class="absolute right-2 top-8 text-xl text-gray-500">
+                                    <ion-icon id="eyeIcon" name="eye-off"></ion-icon>
+                                </button>
+                            </div>
+
+                            <div class="mb-4">
+                                <label for="email" class="block text-sm font-medium">KTP</label>
+                                <input type="file" id="email" name="email" required
+                                    class="w-full p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400">
+                            </div>
+
+                            <div class="flex flex-col w-full">
+                                <label for="depart"
+                                    class="block text-sm font-medium  focus:ring-2 focus:ring-blue-400">Departemen</label>
+
+                                <select name="depart" id="sort"
+                                    class="p-2 border rounded-md w-full  focus:ring-2 focus:ring-blue-400">
+                                    <option value="poltek">Informatika</option>
+                                    <option value="saab">Mesin</option>
+                                    <option value="mercedes">Manajemen Bisnis</option>
+                                </select>
+                            </div>
+
+
+                            <div class="flex justify-end space-x-2 mt-2">
+                                <button type="button" id="closePopupUser"
+                                    class="bg-gray-300 text-black px-4 py-2 rounded-md">Cancel</button>
+                                <button type="submit"
+                                    class="bg-green-500 text-white px-4 py-2 rounded-md">Simpan</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -307,23 +326,35 @@
         closePopup.addEventListener('click', () => {
             popup.classList.add('hidden');
         });
-    </script>
 
-    <script>
-        const togglePass = document.getElementById('togglePass');
-        const passInput = document.getElementById('pass');
-        const eyeIcon = document.getElementById('eyeIcon');
-    
-        togglePass.addEventListener('click', function () {
-            // Jika password sedang disembunyikan
-            if (passInput.type === 'password') {
-                passInput.type = 'text';
-                eyeIcon.setAttribute('name', 'eye'); // Ganti ikon
-            } else {
-                // Jika password sedang ditampilkan
-                passInput.type = 'password';
-                eyeIcon.setAttribute('name', 'eye-off'); // Ganti ikon
-            }
+        // Submit form
+        document.getElementById('popupForm').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Form submitted!');
+            popup.classList.add('hidden');
+        });
+
+        // popup UsersTable
+
+        const openPopupUser = document.getElementById('openPopupUser');
+        const closePopupUser = document.getElementById('closePopupUser');
+        const popupUser = document.getElementById('popupUser');
+
+        // Buka popup
+        openPopupUser.addEventListener('click', () => {
+            popupUser.classList.remove('hidden');
+        });
+
+        // Tutup popup
+        closePopupUser.addEventListener('click', () => {
+            popup.classList.add('hidden');
+        });
+
+        // Submit form
+        document.getElementById('popupFormUser').addEventListener('submit', (e) => {
+            e.preventDefault();
+            alert('Form submitted!');
+            popup.classList.add('hidden');
         });
     </script>
 </body>

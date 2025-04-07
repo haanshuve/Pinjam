@@ -17,7 +17,7 @@ class DashboardController extends Controller
     
     public function index()
     {
-        $users = User::where('role', 'peminjam')->get();
+        $users = User::where('role', 'staff')->get();
         $user = Auth::user();
 
         return view('admin.index', compact('users', 'user'));
